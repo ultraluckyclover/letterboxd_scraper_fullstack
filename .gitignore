@@ -1,0 +1,5 @@
+# backend 
+backend/__pycache__/
+backend/venv/
+backend/instance/
+/backend/chromedriver-mac-arm64
