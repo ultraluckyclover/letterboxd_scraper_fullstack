@@ -15,8 +15,8 @@ def create_movie():
     try:
         data = request.json
 
+        # Validation
         required_fields = ["title", "releaseYear", "description"]
-
         for field in required_fields:
             if field not in data:
                 return jsonify({"error": f'Missing required field: {field}'}), 400
