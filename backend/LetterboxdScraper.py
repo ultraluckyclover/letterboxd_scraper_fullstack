@@ -91,9 +91,10 @@ class LetterboxdScraper:
     def quit_driver(self):
         if self.driver:
             self.driver.quit()
+            self.driver = None
 
 if __name__ == "__main__":
-    username = 'drewpiepiebear'
+    username = 'drewpiepiebear' # filler until I build input alg
     driver_path = '/Users/drewgoldstein/workspace/github.com/ultraluckyclover/fullstack_letterboxd_scraper/backend/chromedriver-mac-arm64/chromedriver'
     browser_binary = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
