@@ -66,7 +66,9 @@ class LetterboxdScraper:
             if check_next_page_exists(xpath):
                 pagination = self.driver.find_element(By.XPATH, '//div[@class="pagination"]')
 
-            container = self.driver.find_element(By.XPATH, '//ul[contains(@class , "poster-list")]')
+            # container = self.driver.find_element(By.XPATH, '//ul[contains(@class , "poster-list")]')
+            container = WebDriverWait(self.driver,5).until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@class , "poster-list")]')))
+
             movies = WebDriverWait(container,5).until(EC.presence_of_all_elements_located((By.XPATH, './li')))
             for movie in movies:
 
@@ -94,12 +96,13 @@ class LetterboxdScraper:
             self.driver = None
 
 if __name__ == "__main__":
-    username = 'drewpiepiebear' # filler until I build input alg
+    username = 'mowiah' # filler until I build input alg
     driver_path = '/Users/drewgoldstein/workspace/github.com/ultraluckyclover/fullstack_letterboxd_scraper/backend/chromedriver-mac-arm64/chromedriver'
     browser_binary = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
     scraper = LetterboxdScraper(username, driver_path, browser_binary, headless = False)
 
+    start = time.time()
 
     try:
         scraper.set_up_driver()
@@ -115,6 +118,10 @@ if __name__ == "__main__":
         df_movies.to_csv('movies.csv', index = True)
     finally:
         scraper.quit_driver()
+
+    end = time.time()
+
+    print(f'Runtime: { end - start } seconds')
 
     
 

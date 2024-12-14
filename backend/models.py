@@ -1,5 +1,4 @@
-from app import db
-
+from config import db
 
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key = True)
@@ -12,7 +11,7 @@ class Movie(db.Model):
     description = db.Column(db.Text, nullable = True)
     movie_url = db.Column(db.String(200), nullable = False)
     img_url = db.Column(db.String(200), nullable = True)
-
+ 
     def to_json(self):
         return {
             "id": self.id,

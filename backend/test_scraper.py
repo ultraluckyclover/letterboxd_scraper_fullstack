@@ -31,7 +31,6 @@ class TestScraperObject(unittest.TestCase):
         mock_chrome.assert_called_once()
         self.assertIsNotNone(self.scraper.driver)
 
-        # assert true
     
     # @patch(webdriver.Chrome)
     # def test_scrape_movies(self, mock_chrome):
@@ -49,9 +48,6 @@ class TestScraperObject(unittest.TestCase):
 
         self.scraper.quit_driver()
         self.assertIsNone(self.scraper.driver)
-
-
-
 
     def tearDown(self):
         if self.scraper:

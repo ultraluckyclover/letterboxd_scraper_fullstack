@@ -1,4 +1,4 @@
-from app import app, db
+from config import app, db
 from flask import request, jsonify
 from models import Movie
 
@@ -7,8 +7,8 @@ from models import Movie
 @app.route("/api/movies", methods=['GET'])
 def get_movies():
     movies = Movie.query.all()
-    result = [movie.to_json() for movie in movies]
-    return jsonify(result), 200
+    json_movies = list(map(lambda x: x.to_json(), movies))
+    return jsonify({"movies": json_movies}), 200
 
 # add a movie
 
