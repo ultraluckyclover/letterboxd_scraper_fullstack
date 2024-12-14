@@ -7,6 +7,9 @@ from selenium.webdriver.chrome.options import Options
 import time  # For pauses
 import random  # For randomized pauses
 import pandas as pd
+from config import app, db
+from models import Movie
+from flask import jsonify
 
 # options = Options()
 # options.headless = False
@@ -88,12 +91,37 @@ class LetterboxdScraper:
             except:
                 next_page = None
 
-        return movie_title, movie_release, movie_img_url, movie_url
+        movies = [{'title': movie_title, 
+                   'releaseYear': movie_release, 
+                   'imgUrl': movie_img_url,
+                   'movieUrl': movie_url
+                   } for movie_title, movie_release, movie_img_url, movie_url in zip(movie_title, movie_release, movie_img_url, movie_url)
+        ]
+        
+        return movies
     
     def quit_driver(self):
         if self.driver:
             self.driver.quit()
             self.driver = None
+
+def add_movies_to_database(movies):
+    with app.app_context():
+        for movie in movies:
+            existing_movie = Movie.query.filter_by(title = movie['title'], release_year=movie['releaseYear']).first()
+            if not existing_movie:
+                new_movie = Movie(title = movie['title'],
+                                  release_year = movie['releaseYear'],
+                                  img_url = movie['imgUrl'],
+                                  movie_url = movie['movieUrl'])
+                db.session.add(new_movie)
+        db.session.commit()
+
+
+# release_year = release_year, 
+#                           description = description, 
+#                           movie_url = movie_url,
+#                           img_url = img_url)
 
 if __name__ == "__main__":
     username = 'mowiah' # filler until I build input alg
@@ -106,14 +134,16 @@ if __name__ == "__main__":
 
     try:
         scraper.set_up_driver()
-        movie_title, movie_release, movie_img_url, movie_url = scraper.scrape_movies()
+        movies = scraper.scrape_movies()
+
+        add_movies_to_database(movies)
 
         df_movies = pd.DataFrame({
-            "movieTitle": movie_title,
-            "year": movie_release,
-            "imageUrl": movie_img_url,
-            "url": movie_url
-        })
+            "movieTitle": movie['title'],
+            "year": movie['releaseYear'],
+            "imageUrl": movie['imgUrl'],
+            "url": movie['movieUrl']
+        } for movie in movies)
 
         df_movies.to_csv('movies.csv', index = True)
     finally:

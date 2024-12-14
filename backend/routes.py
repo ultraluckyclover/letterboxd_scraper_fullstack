@@ -35,6 +35,7 @@ def create_movie():
                           movie_url = movie_url,
                           img_url = img_url)
         
+        
         db.session.add(new_movie)
         db.session.commit()
         return jsonify(new_movie.to_json()), 201
