@@ -1,5 +1,25 @@
 # backend 
-backend/__pycache__/
-backend/venv/
-backend/instance/
+/backend/__pycache__/
+/backend/venv/
+/backend/instance/
 /backend/chromedriver-mac-arm64
+/backend/migrations
+/backend/movies.csv
+
+# frontend
+
+/frontend/package-lock.json
+/frontend/package.json
+/frontend/tailwind.config.js
+/frontend/README.md
+/frontend/src/reportWebVitals.js
+/frontend/src/setupTests.js
+/frontend/index.css
+
+package.json
+package-lock.json
+node_modules
+
+
+
+

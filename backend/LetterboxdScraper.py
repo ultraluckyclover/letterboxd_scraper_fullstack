@@ -9,12 +9,6 @@ import random  # For randomized pauses
 import pandas as pd
 from config import app, db
 from models import Movie
-from flask import jsonify
-
-# options = Options()
-# options.headless = False
-# options.add_argument('window_size=1920x1080')
-# options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 class LetterboxdScraper:
     def __init__(self, username, driver_path, browser_binary = None, headless = False):
@@ -56,7 +50,7 @@ class LetterboxdScraper:
             next_page = pagination.find_element(By.XPATH, './/a[@class="next"]')
             last_page = int(pages[-1].text)
         else:
-            next_page = 1 #goes into while loop once just for the one page
+            next_page = 1 # goes into while loop once just for the one page
 
         movie_title = []
         movie_release = []
@@ -118,26 +112,20 @@ def add_movies_to_database(movies):
         db.session.commit()
 
 
-# release_year = release_year, 
-#                           description = description, 
-#                           movie_url = movie_url,
-#                           img_url = img_url)
-
 if __name__ == "__main__":
     username = 'mowiah' # filler until I build input alg
     driver_path = '/Users/drewgoldstein/workspace/github.com/ultraluckyclover/fullstack_letterboxd_scraper/backend/chromedriver-mac-arm64/chromedriver'
     browser_binary = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
+
     scraper = LetterboxdScraper(username, driver_path, browser_binary, headless = False)
-
     start = time.time()
-
     try:
         scraper.set_up_driver()
         movies = scraper.scrape_movies()
+        add_movies_to_database(movies) # SQLite database
 
-        add_movies_to_database(movies)
-
+        # pandas dataframe for easy testing
         df_movies = pd.DataFrame({
             "movieTitle": movie['title'],
             "year": movie['releaseYear'],
@@ -152,111 +140,3 @@ if __name__ == "__main__":
     end = time.time()
 
     print(f'Runtime: { end - start } seconds')
-
-    
-
-
-
-
-
-      
-
-
-    
-        
-
-
-
-
-
-
-
-
-
-# def set_up():
-    # PATH = '/Users/drewgoldstein/workspace/github.com/ultraluckyclover/fullstack_letterboxd_scraper/backend/chromedriver-mac-arm64/chromedriver'
-    # service = Service(PATH)
-    # driver = webdriver.Chrome(service=service, options=options)
-
-    # username = 'drewiepiebear' # This is a placeholder
-    # website = f'https://letterboxd.com/{username}/watchlist/'
-
-    # driver.get(website)
-
-    # return driver
-
-
-# def scrape_movies(driver):
-
-    # PATH = '/Users/drewgoldstein/workspace/github.com/ultraluckyclover/fullstack_letterboxd_scraper/backend/chromedriver-mac-arm64/chromedriver'
-    # service = Service(PATH)
-    # driver = webdriver.Chrome(service=service, options=options)
-
-    # username = 'drewiepiebear' # This is a placeholder
-    # website = f'https://letterboxd.com/{username}/watchlist/'
-
-    # driver.get(website)
-
-
-    # #checks if there is any pagination
-    # def check_next_page_exists(xpath):
-    #     try:
-    #         driver.find_element(By.XPATH, xpath)
-    #     except:
-    #         return False
-    #     return True
-    
-    # xpath = '//div[@class="pagination"]'
-    # if check_next_page_exists(xpath):
-    # #setting up variables for pagination
-    #     pagination = driver.find_element(By.XPATH, '//div[@class="pagination"]')
-    #     pages = pagination.find_elements(By.XPATH, './/li')
-    #     next_page = pagination.find_element(By.XPATH, './/a[@class="next"]')
-    #     last_page = int(pages[-1].text)
-    # else:
-    #     next_page = 1 #goes into while loop once just for the one page
-
-    # movie_title = []
-    # movie_release = []
-    # movie_img_url = []
-    # movie_url = []
-    # current_page = 1
-
-
-    # while next_page:
-
-    #     if check_next_page_exists(xpath):
-    #         pagination = driver.find_element(By.XPATH, '//div[@class="pagination"]')
-
-    #     container = driver.find_element(By.XPATH, '//ul[contains(@class , "poster-list")]')
-    #     movies = WebDriverWait(container,5).until(EC.presence_of_all_elements_located((By.XPATH, './li')))
-    #     for movie in movies:
-    #         #movie_title.append(movie.find_element(By.XPATH, './/div[@data-film-name]').get_attribute('data-film-name'))
-    #         title_element = WebDriverWait(movie,5).until(EC.presence_of_element_located((By.XPATH, './/div[@data-film-name]'))).get_attribute('data-film-name')
-    #         movie_title.append(title_element)
-
-    #         #movie_release.append(movie.find_element(By.XPATH, './/div[@data-film-release-year]').get_attribute('data-film-release-year'))
-    #         year_element = WebDriverWait(movie,5).until(EC.presence_of_element_located((By.XPATH, './/div[@data-film-release-year]'))).get_attribute('data-film-release-year')
-    #         movie_release.append(year_element)
-
-    #         img_url_element = WebDriverWait(movie,5).until(EC.presence_of_element_located((By.XPATH, './/img[@src]'))).get_attribute('src')
-    #         movie_img_url.append(img_url_element)
-
-    #         url_element = WebDriverWait(movie,5).until(EC.presence_of_element_located((By.XPATH, './/a[@href]'))).get_attribute('href')
-    #         movie_url.append(url_element)
-
-    #     try:
-
-    #         next_page = WebDriverWait(pagination, 10).until(EC.element_to_be_clickable((By.XPATH, './/a[@class="next"]')))
-
-    #         #next_page = pagination.find_element(By.XPATH, './/a[@class="next"]')
-    #         next_page.click()
-    #         current_page += 1
-    #     except:
-    #         next_page = None
-
-    # driver.quit()
-
-    # return movie_title, movie_release, movie_img_url, movie_url
-
-

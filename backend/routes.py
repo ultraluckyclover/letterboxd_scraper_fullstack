@@ -10,6 +10,16 @@ def get_movies():
     json_movies = list(map(lambda x: x.to_json(), movies))
     return jsonify({"movies": json_movies}), 200
 
+# get single movie
+
+@app.route("/api/movies/<int:id>", methods=['GET'])
+def get_movie(id):
+    movie = Movie.query.get(id)
+
+    if not movie:
+        return jsonify({"error": "Movie not found"}), 404
+    return movie.to_json(), 200
+
 # add a movie
 
 @app.route('/api/movies', methods=["POST"])
@@ -44,6 +54,26 @@ def create_movie():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+# update movie
+# I think I will only use this to add descriptions fetched from the TMDB API
+
+@app.route('/api/movies/<int:id>', methods = ['PATCH'])
+def update_movie(id):
+    movie = Movie.query.get(id)
+    if not movie:
+        return jsonify({'error': 'User not found'}), 404
+    
+    data = request.json
+
+    movie.title = data.get('title', movie.title)
+    movie.release_year = data.get('releaseYear', movie.release_year)
+    movie.description = data.get('description', movie.description)
+    movie.img_url = data.get('imgUrl', movie.img_url)
+    movie.movie_url = data.get('movieUrl', movie.movie_url)
+
+    db.session.commit()
+
+    return jsonify({"message": "User updated"}), 200
 
 # delete a movie
 
