@@ -1,37 +1,19 @@
 import { useState, useEffect } from 'react'
 import './App.css';
 import Movie from './components/Movie/Movie'
+import { Home } from './components/Home/Home';
+import { InputUser } from './components/InputUser/InputUser';
 
 function App() {
+  const [username, setUsername] = useState(null);
 
-  const [movies, setMovies] = useState([])
-  const [movie, setMovie] = useState()
+  const handleLogin = (username) => {
+    setUsername(username);
+  };
 
-  useEffect(() => {
-
-    const fetchAndPick = async () => {
-      const fetched = await fetchMovies();
-      pickMovie(fetched);
-    }
-    fetchAndPick()
-  }, [])
-
-  const fetchMovies = async () => {
-    const response = await fetch('http://127.0.0.1:8000/api/movies')
-    const data = await response.json()
-    setMovies(data.movies)
-    console.log(data.movies)
-    return data.movies
-  }
-
-  const pickMovie = (fetched) => {
-    const randomPick = Math.floor(Math.random() * fetched.length)
-    setMovie(fetched[randomPick])
-    console.log("Movie:", fetched[randomPick].title)
-
-  }
-
-  return <Movie movie = {movie}/>
+  return (<div className = 'App'>
+    { username ? ( <Home username = {username}/> ) : (<InputUser onLogin = {handleLogin}/> ) }
+  </div>)
 }
 
 export default App;
