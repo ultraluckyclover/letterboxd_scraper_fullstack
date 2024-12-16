@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import Movie from '../Movie/Movie'
 
-export const Home = ({username}) => {
+export const Home = (username) => {
     const [movies, setMovies] = useState([])
     const [movie, setMovie] = useState()
+
+    console.log('usernam eis', username)
   
     useEffect(() => {
   
